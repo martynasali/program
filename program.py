@@ -1,4 +1,4 @@
-import os
+import sys
 import configparser
 
 
@@ -21,12 +21,14 @@ def get_settings():
 
 
 def read_file(settings):
-    data = []
-    if os.path.isfile(settings["input"]):
-        text_file = open(settings["input"], "r")
-        data = text_file.read()
-        text_file.close()
-        return data
+    try:
+        with open(settings["input"], "r") as text_file:
+            data = text_file.read()
+            text_file.close()
+            return data
+    except FileNotFoundError:
+        print('File not found. Check the name of file.')
+        sys.exit(1)
 
 
 def count(text):
@@ -53,6 +55,7 @@ def sort_and_save(result, settings):
         for key, value in sorted_result.items():
             f.write('%s:%s\n' % (key, value))
         f.close()
+        print('Completed')
 
 
 if __name__ == '__main__':
